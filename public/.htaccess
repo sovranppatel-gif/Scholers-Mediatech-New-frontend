@@ -1,0 +1,12 @@
+# SPA fallback — deep links like /CommunityJoinForm must serve index.html
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Keep real files/folders as-is
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Send everything else to React
+  RewriteRule ^ index.html [L]
+</IfModule>
