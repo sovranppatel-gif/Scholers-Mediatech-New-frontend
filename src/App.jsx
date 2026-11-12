@@ -1,6 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LandingPage from "./components/Landingpage/LandingPage";
+import LandingPage from "./components/Landingpage/CommunityConnectLanding.jsx";
 import BuildingCreativityLanding from "./components/community/BuildingCreativityLanding.jsx";
 import CommunityJoinFormPage from "./components/community/CommunityJoinFormPage.jsx";
 import { AuthProvider } from "./context/auth.jsx";
