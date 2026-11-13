@@ -129,9 +129,9 @@ function Header({ settings }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white shadow-[0_3px_14px_rgba(20,33,61,0.05)]">
-      <div className="mx-auto flex min-h-[88px] max-w-[1900px] items-center justify-between gap-3 px-3 sm:px-5 xl:px-8">
+      <div className="mx-auto flex min-h-[76px] max-w-[1900px] items-center justify-between gap-2 px-3 sm:min-h-[88px] sm:gap-3 sm:px-5 xl:px-8">
         <Link to="/" className="flex min-w-0 shrink-0 items-center gap-3">
-          <img src={logo} alt="Scholars Mediatech logo" className="h-[68px] w-[82px] shrink-0 object-contain sm:h-[74px] sm:w-[94px]" />
+          <img src={logo} alt="Scholars Mediatech logo" className="h-[58px] w-[68px] shrink-0 object-contain sm:h-[74px] sm:w-[94px]" />
           <div className="min-w-0">
             <div className="truncate text-[12px] font-extrabold uppercase tracking-[0.04em] text-[#101b3d] sm:text-sm xl:text-base 2xl:text-lg">
               {companyNameParts ? (
@@ -189,7 +189,7 @@ function Header({ settings }) {
           </Link>
         </div>
 
-        <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 xl:hidden" aria-label="Toggle mobile menu" onClick={() => setMenuOpen((prev) => !prev)}>
+        <button type="button" className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 xl:hidden" aria-label="Toggle mobile menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((prev) => !prev)}>
           {menuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
@@ -259,7 +259,7 @@ function HeroSection() {
             <div className="mb-5 inline-flex items-center rounded-full bg-[#e6edff] px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.17em] text-[#14213d] sm:text-xs">
               COMMUNITY CONNECT BY SCHOLARS MEDIATECH
             </div>
-            <h1 className="max-w-[720px] text-[2.4rem] font-bold leading-[1.08] tracking-[-0.045em] text-[#101b3d] sm:text-5xl lg:text-[2.61rem] xl:text-[2.87rem]">
+            <h1 className="max-w-[720px] text-[clamp(2rem,8vw,2.4rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#101b3d] sm:text-5xl lg:text-[2.61rem] xl:text-[2.87rem]">
               Find the Right <span className="bg-gradient-to-r from-[#099ca5] to-[#18b4b1] bg-clip-text text-transparent">Creative &amp;</span>
               <br className="hidden sm:block" /> <span className="bg-gradient-to-r from-[#2675e8] to-[#00a3d8] bg-clip-text text-transparent">Digital Experts</span> for Your Needs
             </h1>
@@ -287,11 +287,11 @@ function HeroSection() {
           </div>
         </div>
 
-        <div className="mt-5 grid overflow-hidden rounded-[22px] border border-white bg-white/90 py-2 shadow-[0_15px_40px_rgba(32,88,143,0.12)] backdrop-blur sm:grid-cols-2 lg:mt-3 lg:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 overflow-hidden rounded-[22px] border border-white bg-white/90 py-2 shadow-[0_15px_40px_rgba(32,88,143,0.12)] backdrop-blur lg:mt-3 lg:grid-cols-4">
           {stats.map(({ label, icon: Icon }, index) => (
-            <div key={label} className={`flex min-h-[76px] items-center gap-4 px-5 py-3 sm:px-7 lg:px-8 ${index ? "border-t border-slate-200 sm:border-t-0 lg:border-l" : ""} ${index === 2 ? "sm:border-l" : ""}`}>
-              <Icon size={34} strokeWidth={1.8} className="shrink-0 text-[#12b9b1]" />
-              <div className="text-sm font-semibold leading-5 text-[#14213d] sm:text-base">{label}</div>
+            <div key={label} className={`flex min-h-[76px] min-w-0 items-center gap-2 px-2.5 py-3 sm:gap-4 sm:px-5 lg:px-8 ${index > 1 ? "border-t border-slate-200 lg:border-t-0" : ""} ${index % 2 === 1 ? "border-l border-slate-200 lg:border-l" : ""} ${index > 0 && index % 2 === 0 ? "lg:border-l lg:border-slate-200" : ""}`}>
+              <Icon size={28} strokeWidth={1.8} className="shrink-0 text-[#12b9b1] sm:h-[34px] sm:w-[34px]" />
+              <div className="min-w-0 text-xs font-semibold leading-4 text-[#14213d] sm:text-sm sm:leading-5 lg:text-base">{label}</div>
             </div>
           ))}
         </div>
@@ -307,7 +307,7 @@ function ServicesSection() {
       <div className="pointer-events-none absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-[#cbf8f2] opacity-70 blur-3xl" />
       <div className="relative mx-auto max-w-[1800px]">
         <div className="mb-7 text-center sm:mb-9">
-          <h2 className="flex items-center justify-center gap-4 text-3xl font-bold tracking-[-0.045em] text-[#101b3d] sm:text-4xl lg:text-5xl">
+          <h2 className="flex items-center justify-center gap-2 text-[clamp(1.65rem,7vw,1.875rem)] font-bold tracking-[-0.045em] text-[#101b3d] sm:gap-4 sm:text-4xl lg:text-5xl">
             <span className="hidden h-[3px] w-12 rounded-full bg-[#078c98] sm:block" />
             Explore Our Services
             <span className="hidden h-[3px] w-12 rounded-full bg-[#078c98] sm:block" />
@@ -516,7 +516,7 @@ function BecomeCreator() {
       <div className="mx-auto max-w-[1740px] overflow-hidden rounded-[24px] border border-[#e1ebf5] bg-[linear-gradient(110deg,#edf0ff_0%,#f5fbff_48%,#ddfbf7_100%)] shadow-[0_16px_45px_rgba(22,67,103,0.1)] sm:rounded-[30px]">
         <div className="grid items-center lg:grid-cols-[0.9fr_1.1fr]">
           <div className="relative min-h-[220px] overflow-hidden sm:min-h-[290px] lg:min-h-[300px]">
-            <img src={creatorProfileImage} alt="Creator building a profile and growing their business" className="absolute inset-0 h-full w-full object-cover object-center" />
+            <img src={creatorProfileImage} alt="Creator building a profile and growing their business" className="absolute inset-0 h-full w-full object-contain object-center" />
           </div>
           <div className="px-6 pb-7 pt-2 sm:px-9 sm:pb-9 lg:px-10 lg:py-8 xl:px-14">
             <h2 className="text-2xl font-extrabold leading-tight tracking-[-0.035em] text-[#101b3d] sm:text-3xl lg:text-[34px]">Become a Creator on Community Connect</h2>
