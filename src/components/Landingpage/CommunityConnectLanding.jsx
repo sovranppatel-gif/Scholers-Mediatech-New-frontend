@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import heroImage from "../../assets/hero/community-connect-hero.png";
+import creatorProfileImage from "../../assets/hero/Creator Profile.png";
 import photographyIcon from "../../assets/services/photography.webp";
 import videoIcon from "../../assets/services/video.webp";
 import websiteIcon from "../../assets/services/website.webp";
@@ -12,6 +13,15 @@ import adsSeoIcon from "../../assets/services/adsandseo.webp";
 import influencerIcon from "../../assets/services/influencer.webp";
 import newsIcon from "../../assets/services/news.webp";
 import beginnersIcon from "../../assets/services/begineers.webp";
+import processSearchIcon from "../../assets/working-process/search.webp";
+import processCompareIcon from "../../assets/working-process/compare.webp";
+import processBookIcon from "../../assets/working-process/book.webp";
+import processDeliveryIcon from "../../assets/working-process/delivery.webp";
+import processReviewIcon from "../../assets/working-process/review.webp";
+import arjunCreatorPhoto from "../../assets/featured_creator_photos/Arjun_Verma.png";
+import nehaCreatorPhoto from "../../assets/featured_creator_photos/Neha_Sharma.png";
+import rohitCreatorPhoto from "../../assets/featured_creator_photos/Rohit_Das.png";
+import priyaCreatorPhoto from "../../assets/featured_creator_photos/Priya_Nair.png";
 import {
   ArrowRight,
   BadgeCheck,
@@ -20,9 +30,14 @@ import {
   CheckCircle2,
   ChevronDown,
   Code2,
+  Coins,
+  Facebook,
+  Globe2,
+  Headset,
   Instagram,
   Layout,
   Linkedin,
+  LockKeyhole,
   Mail,
   Menu,
   MessageSquareText,
@@ -63,23 +78,24 @@ const stats = [
   { label: "Community Connections", icon: Star },
 ];
 const creatorCards = [
-  { name: "Arjun Verma", title: "Photographer", location: "Mumbai, India", price: "₹5,000", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80" },
-  { name: "Neha Sharma", title: "UI/UX Designer", location: "Bengaluru, India", price: "₹8,000", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80" },
-  { name: "Rehit Das", title: "Web Developer", location: "Kolkata, India", price: "₹15,000", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80" },
-  { name: "Priya Nair", title: "Content Strategist", location: "Delhi, India", price: "₹6,000", image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80" },
+  { title: "Photography & Cinematography", category: "Photography & Production", image: arjunCreatorPhoto },
+  { title: "UI/UX Design", category: "Design & Technology", image: nehaCreatorPhoto },
+  { title: "Web & App Development", category: "Website & App", image: rohitCreatorPhoto },
+  { title: "Content Creation", category: "Video & Audio", image: priyaCreatorPhoto },
 ];
 const processSteps = [
-  { title: "Search", description: "Explore services, portfolios, and specialists that match your goals.", icon: Search },
-  { title: "Compare", description: "Review work quality, pricing, and experience before you choose.", icon: Layout },
-  { title: "Book", description: "Start the project with a clear brief and milestone-based collaboration.", icon: Briefcase },
-  { title: "Deliver", description: "Get polished deliverables and ongoing support when you need it.", icon: Wand2 },
+  { title: "Search", description: "Find services or creators for your requirement.", image: processSearchIcon, accent: "teal" },
+  { title: "Compare", description: "Check profiles, portfolios, ratings and pricing.", image: processCompareIcon, accent: "amber" },
+  { title: "Book", description: "Select a creator, share details and place an order.", image: processBookIcon, accent: "purple" },
+  { title: "Get Delivery", description: "The creator works and delivers as per agreement.", image: processDeliveryIcon, accent: "blue" },
+  { title: "Review", description: "Rate, review and build long-term collaboration.", image: processReviewIcon, accent: "green" },
 ];
 const whyChoose = [
-  { title: "Verified Experts", description: "Access trusted specialists with quality-focused profiles.", icon: ShieldCheck },
-  { title: "Transparent Pricing", description: "Understand costs clearly before committing to a project.", icon: TrendingUp },
-  { title: "Secure Payments", description: "Safer workflows with clear milestones and protected payments.", icon: BadgeCheck },
-  { title: "Simple Communication", description: "Message teams quickly and stay aligned from day one.", icon: MessageSquareText },
-  { title: "Dedicated Support", description: "Get guidance and help when your requirements evolve.", icon: Users },
+  { title: "Verified Creators", description: "Work with genuine, reviewed professionals and agencies.", icon: ShieldCheck, color: "text-[#13aaa8]", surface: "bg-[#e9fbf8]" },
+  { title: "Transparent Pricing", description: "Clear, upfront pricing with no hidden charges.", icon: Coins, color: "text-[#f4a20b]", surface: "bg-[#fff8e9]" },
+  { title: "Secure Payments", description: "Safe and reliable payment flow with order protection.", icon: LockKeyhole, color: "text-[#2878ed]", surface: "bg-[#edf4ff]" },
+  { title: "Easy Communication", description: "Stay connected, share files and track progress in one place.", icon: MessageSquareText, color: "text-[#16aaa3]", surface: "bg-[#e9fbf8]" },
+  { title: "Dedicated Support", description: "Get quick help from our support team whenever needed.", icon: Headset, color: "text-[#bd63e6]", surface: "bg-[#fbf0ff]" },
 ];
 const testimonials = [
   { name: "Karan Mehta", role: "Business Owner", quote: "The platform made it easy to find the right creative partner for our launch campaign and we moved faster than expected.", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80" },
@@ -87,11 +103,11 @@ const testimonials = [
   { name: "Amit Roy", role: "Startup Founder", quote: "From concept to launch, the process stayed transparent and organized, which made the collaboration far smoother.", image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80" },
 ];
 const faqItems = [
-  { question: "What is Community Connect?", answer: "Community Connect is a marketplace for discovering creative and digital experts from photography and video to design, marketing, and web development." },
+  { question: "What is Community Connect?", answer: "Community Connect is a marketplace by Scholars Mediatech to discover, compare and hire creators, professionals and agencies for creative and digital services." },
   { question: "How do I hire a creator or agency?", answer: "Search by skill or category, compare profiles, review examples, and contact the professional whose fit best matches your goals." },
-  { question: "How do I create or register?", answer: "Use the creator registration form from the homepage and share your work details so the team can review your profile." },
-  { question: "Can I pay safely?", answer: "Yes. Transparent pricing and clear milestones are designed to keep project scopes and payments easier to manage." },
-  { question: "What services are available?", answer: "The marketplace supports creative, digital, and marketing services including photography, website development, video editing, SEO, and more." },
+  { question: "Is the pricing fixed or negotiable?", answer: "Pricing can vary by creator and project scope. Review the listed price and confirm deliverables and any additional costs with the creator before placing an order." },
+  { question: "How do payments and refunds work?", answer: "Review the payment and refund terms shown for your order before confirming. For help with a specific payment or refund, contact the Community Connect support team." },
+  { question: "Can I register as a creator?", answer: "Yes. Use the creator registration form to submit your profile and work details. Select “Become a Creator” and follow the registration steps." },
 ];
 
 function Header({ settings }) {
@@ -327,17 +343,56 @@ function ServicesSection() {
 
 function FeaturedCreators() {
   return (
-    <section id="creators" className="bg-[#f6fbff] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0a5d68]">Featured Creators</div><h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">Top-rated experts ready for your next project.</h2></div><button type="button" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-[#14213d] transition hover:border-[#089eaa]/40 hover:text-[#089eaa]">Explore All Creators <ArrowRight size={15} /></button></div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+    <section id="creators" className="relative overflow-hidden bg-[linear-gradient(115deg,#f3f5ff_0%,#fbfcff_50%,#effbff_100%)] px-4 py-14 sm:px-6 lg:px-8 lg:py-[72px]">
+      <div className="pointer-events-none absolute -left-20 top-0 h-56 w-72 rounded-full bg-[#c4f4ff]/70 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 bottom-0 h-56 w-72 rounded-full bg-[#d9f7f2]/70 blur-3xl" />
+      <div className="relative mx-auto max-w-[1900px]">
+        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="flex flex-wrap items-center gap-x-4 text-3xl font-extrabold tracking-[-0.045em] text-[#101b3d] sm:text-4xl lg:text-5xl">
+              Featured Creators
+              <span className="hidden h-[3px] w-16 rounded-full bg-gradient-to-r from-[#079da3] to-[#b4f0e9] sm:inline-block" />
+            </h2>
+            <p className="mt-2 text-base text-[#596276] sm:text-lg">
+              Explore creative professionals from the Community Connect marketplace.
+            </p>
+            <p className="mt-1 text-xs text-[#64748b] sm:text-sm">
+              Creator profiles are previews; ratings, reviews, and pricing will appear with verified listings.
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-[#078b96] sm:text-base">
+            Creator listings coming soon <ArrowRight size={19} />
+          </span>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
           {creatorCards.map((creator) => (
-            <article key={creator.name} className="overflow-hidden rounded-[28px] border border-slate-200 bg-white p-3 shadow-[0_18px_45px_rgba(15,23,42,0.04)]">
-              <div className="relative"><img src={creator.image} alt={creator.name} className="h-64 w-full rounded-[22px] object-cover" /><div className="absolute right-3 top-3 rounded-full bg-white/90 px-2 py-1 text-xs font-semibold text-[#14213d] backdrop-blur-sm">4.9 ★</div></div>
-              <div className="p-3 pb-2">
-                <div className="flex items-center justify-between gap-3"><div><h3 className="text-xl font-semibold text-[#14213d]">{creator.title}</h3><p className="mt-1 text-sm text-slate-600">{creator.name}</p></div><div className="rounded-full bg-[#edfaff] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0a6b74]">300+ reviews</div></div>
-                <div className="mt-4 flex items-center gap-2 text-sm text-slate-500"><MapPinIcon />{creator.location}</div>
-                <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4"><div><div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Starting at</div><div className="text-lg font-bold text-[#14213d]">{creator.price}</div></div><button type="button" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#089eaa] to-[#2355cf] px-4 py-2 text-sm font-semibold text-white shadow-[0_15px_25px_rgba(8,158,170,0.25)]">View profile <ArrowRight size={15} /></button></div>
+            <article key={creator.title} className="group rounded-[28px] border border-[#e2eafa] bg-white/90 p-3 shadow-[0_12px_30px_rgba(37,79,141,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(37,79,141,0.14)] sm:p-3.5">
+              <div className="flex h-full min-h-[186px] gap-3 sm:gap-4">
+                <img
+                  src={creator.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-[184px] w-[38%] shrink-0 rounded-[20px] object-cover sm:w-[42%]"
+                />
+                <div className="flex min-w-0 flex-1 flex-col py-1">
+                  <span className="mb-2 inline-flex w-fit rounded-full bg-[#edfaff] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[#078b96]">
+                    Profile preview
+                  </span>
+                  <h3 className="text-base font-extrabold leading-5 tracking-tight text-[#101b3d] sm:text-lg">
+                    {creator.title}
+                  </h3>
+                  <p className="mt-2 text-xs leading-5 text-[#596276] sm:text-sm">
+                    Discover professionals offering {creator.category.toLowerCase()} services.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent("community-connect-search", { detail: creator.category }))}
+                    className="mt-auto inline-flex items-center justify-between gap-1.5 whitespace-nowrap rounded-full bg-[#d9f5f2] px-2.5 py-2 text-xs font-bold text-[#08757b] transition hover:bg-[#c4eeeb] sm:text-[11px] xl:text-xs"
+                  >
+                    Explore services <ArrowRight size={17} />
+                  </button>
+                </div>
               </div>
             </article>
           ))}
@@ -348,18 +403,77 @@ function FeaturedCreators() {
 }
 
 function HowItWorks() {
+  const accentStyles = {
+    teal: {
+      card: "border-[#d9eeee]",
+      icon: "bg-[#e8f8f6]",
+      label: "text-[#078b8c]",
+      rule: "bg-[#0a9c9b]",
+    },
+    amber: {
+      card: "border-[#f1e7d0]",
+      icon: "bg-[#fff5df]",
+      label: "text-[#bd7909]",
+      rule: "bg-[#e9a324]",
+    },
+    purple: {
+      card: "border-[#e9def5]",
+      icon: "bg-[#f5edff]",
+      label: "text-[#8b50bf]",
+      rule: "bg-[#a66bd1]",
+    },
+    blue: {
+      card: "border-[#dce8f6]",
+      icon: "bg-[#eaf3ff]",
+      label: "text-[#3478bd]",
+      rule: "bg-[#498bd0]",
+    },
+    green: {
+      card: "border-[#dfedda]",
+      icon: "bg-[#eff9e9]",
+      label: "text-[#4d933e]",
+      rule: "bg-[#68ad55]",
+    },
+  };
+
   return (
-    <section id="how-it-works" className="bg-white px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-[#edfaff] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0a5d68]">How Community Connect Works</div><h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">A simple path from idea to delivery.</h2></div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {processSteps.map(({ title, description, icon: Icon }, index) => (
-            <div key={title} className="rounded-[28px] border border-slate-200 bg-[#f9fbff] p-5 shadow-[0_18px_35px_rgba(15,23,42,0.04)]">
-              <div className="mb-4 flex items-center justify-between"><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-[#089eaa] to-[#2355cf] text-white shadow-md"><Icon size={18} /></div><div className="text-sm font-semibold text-slate-400">0{index + 1}</div></div>
-              <h3 className="text-xl font-semibold text-[#14213d]">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
-            </div>
-          ))}
+    <section id="how-it-works" className="relative overflow-hidden bg-[#f7fbff] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <div className="relative mx-auto max-w-[1900px]">
+        <div className="mb-8 text-center lg:mb-10">
+          <span className="inline-flex rounded-full border border-[#d7eeee] bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#078b8c] shadow-sm">Our Working Process</span>
+          <h2 className="mt-3 text-2xl font-extrabold tracking-[-0.04em] text-[#101b3d] sm:text-3xl lg:text-4xl">How Community Connect Works</h2>
+          <p className="mt-2 text-sm text-[#596276] sm:text-base">From finding the right expert to getting your work done.</p>
+        </div>
+
+        <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
+          {processSteps.map(({ title, description, image, accent }, index) => {
+            const colors = accentStyles[accent];
+            return (
+              <div key={title} className="relative">
+                <article className={`relative flex h-full min-h-[214px] flex-col overflow-hidden rounded-[22px] border bg-white px-4 py-4 shadow-[0_10px_28px_rgba(28,66,103,0.06)] sm:min-h-[220px] sm:px-5 sm:py-5 ${colors.card}`}>
+                  <span className={`absolute inset-x-0 top-0 h-1 ${colors.rule}`} />
+                  <div className="flex items-center justify-between">
+                    <span className={`text-[10px] font-extrabold uppercase tracking-[0.13em] ${colors.label}`}>Step {String(index + 1).padStart(2, "0")}</span>
+                    <span className={`flex h-[54px] w-[54px] items-center justify-center rounded-2xl ${colors.icon}`}>
+                      <img src={image} alt="" aria-hidden="true" className="h-11 w-11 object-contain" />
+                    </span>
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="text-base font-extrabold leading-tight tracking-tight text-[#101b3d] sm:text-lg">{title}</h3>
+                    <p className="mt-2 text-sm leading-[1.55] text-[#596276]">{description}</p>
+                  </div>
+                </article>
+                {index < processSteps.length - 1 && (
+                  <ArrowRight
+                    aria-hidden="true"
+                    size={18}
+                    strokeWidth={2.4}
+                    className="absolute -right-[22px] top-1/2 z-10 hidden -translate-y-1/2 text-[#89a6b8] xl:block"
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -368,9 +482,29 @@ function HowItWorks() {
 
 function WhyChooseUs() {
   return (
-    <section id="why-us" className="bg-[#f3fbff] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl"><div className="mb-10 text-center"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0a5d68]">Why Choose Community Connect</div><h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">Smart collaboration for businesses, creators, and growing teams.</h2></div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">{whyChoose.map(({ title, description, icon: Icon }) => (<div key={title} className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_18px_35px_rgba(15,23,42,0.04)]"><div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-[#e7faff] to-[#eae8ff] text-[#089eaa]"><Icon size={20} /></div><h3 className="text-lg font-semibold text-[#14213d]">{title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{description}</p></div>))}</div>
+    <section id="why-us" className="bg-[linear-gradient(180deg,#ffffff_0%,#f7fbff_100%)] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+      <div className="mx-auto max-w-[1740px]">
+        <div className="mb-7 text-center sm:mb-8">
+          <h2 className="flex items-center justify-center gap-3 text-2xl font-extrabold tracking-[-0.04em] text-[#101b3d] sm:text-3xl lg:text-4xl">
+            <span className="hidden h-[2px] w-10 rounded-full bg-[#39b8b8] sm:block" />
+            Why Choose Community Connect
+            <span className="hidden h-[2px] w-10 rounded-full bg-[#39b8b8] sm:block" />
+          </h2>
+          <p className="mt-2 text-sm text-[#596276] sm:text-base">A trusted, creator-first marketplace by Scholars Mediatech.</p>
+        </div>
+        <div className="grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
+          {whyChoose.map(({ title, description, icon: Icon, color, surface }) => (
+            <article key={title} className="flex min-h-[104px] items-center gap-3 rounded-[20px] border border-[#e7edf4] bg-white px-3.5 py-4 shadow-[0_8px_20px_rgba(27,57,87,0.07)] sm:gap-3.5 sm:px-4">
+              <span className={`flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-full ${surface} ${color}`}>
+                <Icon size={29} strokeWidth={2.2} aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-sm font-extrabold leading-tight text-[#101b3d] sm:text-base">{title}</h3>
+                <p className="mt-1.5 text-xs leading-[1.4] text-[#454e60] sm:text-[13px]">{description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -378,18 +512,26 @@ function WhyChooseUs() {
 
 function BecomeCreator() {
   return (
-    <section id="become-creator" className="bg-white px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[36px] bg-[linear-gradient(135deg,#edf7ff_0%,#f5f5ff_100%)] p-6 shadow-[0_30px_80px_rgba(15,23,42,0.06)] sm:p-8 lg:p-10">
-        <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Creator working on a laptop" className="h-[420px] w-full rounded-[30px] object-cover shadow-[0_25px_60px_rgba(15,23,42,0.12)]" /></div>
-          <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0a5d68]">Become a Creator</div>
-            <h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">Showcase your skills, grow your business, and connect with the right clients.</h2>
-            <p className="mt-4 max-w-xl text-base leading-7 text-slate-600">Showcase your work, build your profile, and grow your client base with trusted connections and a premium marketplace experience.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/CommunityJoinForm" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#089eaa] to-[#2355cf] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_25px_rgba(8,158,170,0.25)]">Register as a Creator <ArrowRight size={16} /></Link>
-              <Link to="/CommunityJoinForm" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-[#14213d] hover:border-[#089eaa]/40 hover:text-[#089eaa]">Showcase your work</Link>
+    <section id="become-creator" className="bg-white px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="mx-auto max-w-[1740px] overflow-hidden rounded-[24px] border border-[#e1ebf5] bg-[linear-gradient(110deg,#edf0ff_0%,#f5fbff_48%,#ddfbf7_100%)] shadow-[0_16px_45px_rgba(22,67,103,0.1)] sm:rounded-[30px]">
+        <div className="grid items-center lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative min-h-[220px] overflow-hidden sm:min-h-[290px] lg:min-h-[300px]">
+            <img src={creatorProfileImage} alt="Creator building a profile and growing their business" className="absolute inset-0 h-full w-full object-cover object-center" />
+          </div>
+          <div className="px-6 pb-7 pt-2 sm:px-9 sm:pb-9 lg:px-10 lg:py-8 xl:px-14">
+            <h2 className="text-2xl font-extrabold leading-tight tracking-[-0.035em] text-[#101b3d] sm:text-3xl lg:text-[34px]">Become a Creator on Community Connect</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#3d485c] sm:text-base sm:leading-7">Showcase your skills, build your portfolio, get discovered by real clients and grow your business with Scholars Mediatech.</p>
+            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-[#26334a] sm:gap-x-8 sm:text-sm">
+              {["Create your profile", "Showcase your work", "Get bookings & grow"].map((benefit) => (
+                <span key={benefit} className="inline-flex items-center gap-2">
+                  <CheckCircle2 size={18} className="shrink-0 fill-[#079da3] text-white" aria-hidden="true" />
+                  {benefit}
+                </span>
+              ))}
             </div>
+            <Link to="/CommunityJoinForm" className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#079da3] px-6 py-3 text-sm font-bold text-white shadow-[0_8px_18px_rgba(7,157,163,0.25)] transition-colors hover:bg-[#087f89]">
+              Register as a Creator <ArrowRight size={17} />
+            </Link>
           </div>
         </div>
       </div>
@@ -398,21 +540,37 @@ function BecomeCreator() {
 }
 
 function AboutSection() {
+  const aboutMetrics = [
+    { value: "120+", label: "Projects Delivered", icon: Users },
+    { value: "38%", label: "Avg. Uplift in Conversions", icon: TrendingUp },
+    { value: "92%", label: "Client Retention", icon: Layout },
+    { value: "7+", label: "Countries Served", icon: Globe2 },
+  ];
+
   return (
-    <section id="about" className="bg-[#ffffff] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="flex justify-center lg:justify-start"><div className="flex h-52 w-52 items-center justify-center rounded-[30px] bg-[radial-gradient(circle_at_top,_rgba(8,158,170,0.25),rgba(255,255,255,0)_50%),linear-gradient(135deg,#f5f9ff,#dbeaff)] p-8 shadow-[0_25px_50px_rgba(17,91,117,0.12)] ring-1 ring-[#d9efff]"><div className="rounded-[28px] bg-[#f7efce] px-5 py-3 text-center shadow-inner ring-1 ring-[#e7d297]"><div className="text-2xl font-black tracking-tight text-[#1d2640]">SCHOLARS</div><div className="text-2xl font-black tracking-tight text-[#1d2640]">MEDIATECH</div></div></div></div>
-          <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-[#edfaff] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0a5d68]">About Scholars Mediatech</div>
-            <h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">A product-minded partner for the creative economy.</h2>
-            <p className="mt-4 text-base leading-7 text-slate-600">Scholars Mediatech Pvt. Ltd. builds technology platforms that connect businesses, creators, and digital specialists with the opportunities they need to grow intelligently.</p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-[22px] border border-slate-200 bg-[#f8fbff] p-4"><div className="text-3xl font-bold text-[#14213d]">120+</div><div className="mt-1 text-sm text-slate-600">Projects delivered</div></div>
-              <div className="rounded-[22px] border border-slate-200 bg-[#f8fbff] p-4"><div className="text-3xl font-bold text-[#14213d]">38</div><div className="mt-1 text-sm text-slate-600">Expert teams</div></div>
-              <div className="rounded-[22px] border border-slate-200 bg-[#f8fbff] p-4"><div className="text-3xl font-bold text-[#14213d]">92%</div><div className="mt-1 text-sm text-slate-600">Client retention</div></div>
-              <div className="rounded-[22px] border border-slate-200 bg-[#f8fbff] p-4"><div className="text-3xl font-bold text-[#14213d]">74</div><div className="mt-1 text-sm text-slate-600">Countries served</div></div>
-            </div>
+    <section id="about" className="relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+      <div className="pointer-events-none absolute -left-12 top-1/2 h-36 w-36 -translate-y-1/2 rounded-full bg-[#d9cbff]/45 blur-3xl" />
+      <div className="pointer-events-none absolute -right-12 top-1/2 h-36 w-36 -translate-y-1/2 rounded-full bg-[#c4f6f1]/50 blur-3xl" />
+      <div className="relative mx-auto max-w-[1740px]">
+        <div className="grid items-center gap-7 lg:grid-cols-[0.72fr_1.55fr_1fr] lg:gap-8">
+          <div className="flex justify-center lg:justify-start">
+            <img src={logo} alt="Scholars Mediatech" className="h-36 w-56 object-contain sm:h-40 sm:w-64 lg:h-44 lg:w-full" />
+          </div>
+          <div className="border-y border-[#d9e1eb] py-6 text-center sm:py-7 lg:border-y-0 lg:border-l lg:py-1 lg:pl-8 lg:text-left xl:pl-12">
+            <div className="mb-1 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#0c9d9e]">About Scholars Mediatech</div>
+            <h2 className="text-xl font-extrabold leading-tight tracking-[-0.035em] text-[#101b3d] sm:text-2xl">A product-minded partner for the creative economy.</h2>
+            <p className="mt-2 text-sm leading-[1.55] text-[#454e60] sm:text-[15px]">Scholars Mediatech Pvt. Ltd. is a technology-driven company building platforms, marketplaces and digital solutions that connect creators, professionals, businesses and communities. With Community Connect, we aim to make creative and digital services more accessible, transparent and impactful for everyone.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4 lg:grid-cols-2 lg:gap-x-5 lg:gap-y-3 lg:border-l lg:border-[#d9e1eb] lg:pl-7 xl:pl-9">
+            {aboutMetrics.map(({ value, label, icon: Icon }) => (
+              <div key={label} className="flex min-w-0 items-center gap-2.5">
+                <Icon size={23} strokeWidth={2.2} className="shrink-0 text-[#18a9a9]" aria-hidden="true" />
+                <div className="flex min-w-0 items-baseline gap-2">
+                  <span className="shrink-0 text-lg font-extrabold leading-none text-[#101b3d] sm:text-xl">{value}</span>
+                  <span className="min-w-0 text-[10px] font-medium leading-tight text-[#454e60] sm:text-[11px]">{label}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -421,16 +579,47 @@ function AboutSection() {
 }
 
 function Testimonials() {
+  const testimonialsTrack = useRef(null);
+  const scrollTestimonials = (direction) => {
+    if (!testimonialsTrack.current) return;
+    const cardWidth = testimonialsTrack.current.firstElementChild?.getBoundingClientRect().width ?? 0;
+    testimonialsTrack.current.scrollBy({
+      left: direction * (cardWidth + 16),
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <section id="community" className="bg-[#f8fbff] px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-white px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0a5d68]">Community Feedback</div><h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">Real stories from clients and creatives.</h2></div>
-        <div className="grid gap-5 lg:grid-cols-3">
+    <section id="community" className="bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)] px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+      <div className="mx-auto max-w-[1740px]">
+        <div className="mb-5 flex items-end justify-between gap-4 sm:mb-6">
+          <div>
+            <h2 className="text-xl font-extrabold tracking-[-0.035em] text-[#101b3d] sm:text-2xl">What Our Community Says</h2>
+            <p className="mt-1 text-xs text-[#596276] sm:text-sm">Real stories from clients and creators on Community Connect.</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <button type="button" aria-label="Scroll testimonials left" onClick={() => scrollTestimonials(-1)} className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e1eaf2] bg-white text-[#16899b] shadow-sm transition hover:bg-[#effafa]">
+              <ArrowRight size={17} className="rotate-180" />
+            </button>
+            <button type="button" aria-label="Scroll testimonials right" onClick={() => scrollTestimonials(1)} className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#d6eeee] bg-[#e8f8f7] text-[#16899b] shadow-sm transition hover:bg-[#d9f2f0]">
+              <ArrowRight size={17} />
+            </button>
+          </div>
+        </div>
+        <div ref={testimonialsTrack} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {testimonials.map((person) => (
-            <article key={person.name} className="rounded-[30px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.04)]">
-              <div className="flex items-center gap-4"><img src={person.image} alt={person.name} className="h-14 w-14 rounded-full object-cover" /><div><h3 className="text-lg font-semibold text-[#14213d]">{person.name}</h3><p className="text-sm text-slate-500">{person.role}</p></div></div>
-              <div className="mt-4 flex items-center gap-1 text-[#f59e0b]">{Array.from({ length: 5 }).map((_, index) => <Star key={`${person.name}-${index}`} size={15} fill="currentColor" />)}</div>
-              <p className="mt-4 text-base leading-7 text-slate-600">“{person.quote}”</p>
+            <article key={person.name} className="flex min-h-[150px] w-full shrink-0 snap-start flex-col rounded-[20px] border border-[#e5ebf2] bg-white p-4 shadow-[0_8px_22px_rgba(25,57,90,0.07)] sm:min-h-[160px] sm:basis-[calc(50%-0.5rem)] sm:p-5 xl:basis-[calc(33.333%-0.67rem)]">
+              <div className="flex items-center gap-3">
+                <img src={person.image} alt={person.name} className="h-11 w-11 shrink-0 rounded-full object-cover sm:h-12 sm:w-12" />
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-sm font-extrabold leading-tight text-[#101b3d] sm:text-base">{person.name}</h3>
+                  <p className="mt-0.5 text-xs text-[#596276]">{person.role}</p>
+                </div>
+                <div className="flex shrink-0 items-center gap-0.5 text-[#f5a500]" aria-label="5 out of 5 stars">
+                  {Array.from({ length: 5 }).map((_, index) => <Star key={`${person.name}-${index}`} size={14} fill="currentColor" />)}
+                </div>
+              </div>
+              <p className="mt-3 text-xs leading-[1.55] text-[#30394e] sm:text-sm">“{person.quote}”</p>
             </article>
           ))}
         </div>
@@ -442,10 +631,46 @@ function Testimonials() {
 function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0);
   return (
-    <section id="faq" className="bg-white px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#089eaa]/20 bg-[#edfaff] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0a5d68]">Frequently Asked Questions</div><h2 className="text-3xl font-semibold tracking-[-0.05em] text-[#14213d] sm:text-4xl">Quick answers for creators and clients.</h2></div>
-        <div className="mx-auto max-w-4xl space-y-4">{faqItems.map((item, index) => (<div key={item.question} className="overflow-hidden rounded-[24px] border border-slate-200 bg-[#f8fbff]"><button type="button" onClick={() => setOpenIndex(openIndex === index ? -1 : index)} className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-lg font-semibold text-[#14213d]">{item.question}<span className={`inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#089eaa] transition ${openIndex === index ? "rotate-180" : ""}`}><ChevronDown size={18} /></span></button>{openIndex === index && <div className="px-5 pb-5 text-base leading-7 text-slate-600">{item.answer}</div>}</div>))}</div>
+    <section id="faq" className="relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <div className="mx-auto grid max-w-[1740px] items-center gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          <h2 className="text-2xl font-extrabold tracking-[-0.04em] text-[#101b3d] sm:text-3xl">Frequently Asked Questions</h2>
+          <p className="mt-1.5 text-sm text-[#596276] sm:text-base">Quick answers to common questions about Community Connect.</p>
+          <svg viewBox="0 0 300 240" role="img" aria-label="Question and answer chat bubbles" className="mt-5 h-48 w-full max-w-[300px] sm:h-56 lg:mt-7 lg:h-60">
+            <defs>
+              <linearGradient id="faqQuestionGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#8295ff" />
+                <stop offset="100%" stopColor="#5559e8" />
+              </linearGradient>
+              <linearGradient id="faqAnswerGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#bc77f2" />
+                <stop offset="100%" stopColor="#873de1" />
+              </linearGradient>
+              <filter id="faqBubbleShadow" x="-30%" y="-30%" width="160%" height="170%">
+                <feDropShadow dx="0" dy="8" stdDeviation="7" floodColor="#4f46e5" floodOpacity=".2" />
+              </filter>
+            </defs>
+            <path d="M66 33c-4-10-2-17 1-24M88 30c2-9 7-14 12-19M221 58c5-9 11-13 18-15M244 77c7-5 14-7 21-7M38 176c-9 2-15 7-20 13M52 194c-8 5-12 11-14 18" fill="none" stroke="#22c6d0" strokeLinecap="round" strokeWidth="7" />
+            <path d="M49 53a20 20 0 0 1 20-20h91a20 20 0 0 1 20 20v91a20 20 0 0 1-20 20h-35l-32 28v-28H69a20 20 0 0 1-20-20z" fill="url(#faqQuestionGradient)" filter="url(#faqBubbleShadow)" />
+            <text x="114" y="126" fill="white" fontFamily="Arial, sans-serif" fontSize="83" fontWeight="800" textAnchor="middle">Q</text>
+            <path d="M134 130a19 19 0 0 1 19-19h87a19 19 0 0 1 19 19v65a19 19 0 0 1-19 19h-21v24l-29-24h-37a19 19 0 0 1-19-19z" fill="url(#faqAnswerGradient)" filter="url(#faqBubbleShadow)" />
+            <text x="196" y="187" fill="white" fontFamily="Arial, sans-serif" fontSize="61" fontWeight="800" textAnchor="middle">A</text>
+          </svg>
+        </div>
+        <div className="space-y-2.5">
+          {faqItems.map((item, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <article key={item.question} className={`overflow-hidden rounded-[17px] border bg-white shadow-[0_5px_13px_rgba(27,57,87,0.07)] transition-colors ${isOpen ? "border-[#cfe6f8] bg-[#f7fbff]" : "border-[#e8edf3]"}`}>
+                <button type="button" aria-expanded={isOpen} onClick={() => setOpenIndex(isOpen ? -1 : index)} className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left sm:px-5 sm:py-3.5">
+                  <span className={`text-sm font-extrabold leading-snug sm:text-base ${isOpen ? "text-[#078b91]" : "text-[#101b3d]"}`}>{item.question}</span>
+                  <ChevronDown size={19} className={`shrink-0 text-[#26344c] transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                </button>
+                {isOpen && <p className="px-4 pb-4 text-xs leading-[1.55] text-[#454e60] sm:px-5 sm:pb-4 sm:text-sm">{item.answer}</p>}
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -453,28 +678,87 @@ function FaqSection() {
 
 function FooterSection({ settings }) {
   const socialLinks = [
-    { label: "Instagram", href: settings.socialLinks.instagram, icon: Instagram },
-    { label: "LinkedIn", href: settings.socialLinks.linkedin, icon: Linkedin },
-    { label: "Twitter / X", href: settings.socialLinks.twitter, icon: Twitter },
-    { label: "YouTube", href: settings.socialLinks.youtube, icon: Youtube },
+    { label: "YouTube", href: settings.socialLinks?.youtube || defaultLandingSettings.socialLinks.youtube, icon: Youtube, color: "text-[#f32929]" },
+    { label: "Instagram", href: settings.socialLinks?.instagram || defaultLandingSettings.socialLinks.instagram, icon: Instagram },
+    { label: "Facebook", href: settings.socialLinks?.facebook || defaultLandingSettings.socialLinks.facebook, icon: Facebook, color: "text-[#1877f2]" },
+    { label: "LinkedIn", href: settings.socialLinks?.linkedin || defaultLandingSettings.socialLinks.linkedin, icon: Linkedin },
+    { label: "X", href: settings.socialLinks?.twitter || defaultLandingSettings.socialLinks.twitter, icon: Twitter, color: "text-[#111827]" },
   ];
 
   return (
-    <footer id="contact" className="bg-[#0d1a2a] px-4 pb-10 pt-16 text-slate-200 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr_0.9fr_0.9fr]">
-          <div>
-            <div className="flex items-center gap-3"><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f3d06d] to-[#d7a83b] p-1.5"><img src={logo} alt="Scholars Mediatech logo" className="h-full w-full object-contain" /></div><div><div className="text-lg font-semibold text-white">Scholars Mediatech Pvt. Ltd.</div><div className="text-xs uppercase tracking-[0.08em] text-slate-400">Building Your Creativity</div></div></div>
-            <p className="mt-5 max-w-sm text-sm leading-7 text-slate-300">A technology-driven company building creative and digital platforms that help communities, businesses, and professionals grow together.</p>
-            <div className="mt-6 flex items-center gap-3 text-sm text-slate-300"><span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-white"><Phone size={16} /></span>{settings.contactPhone || "+919340065550"}</div>
-            <div className="mt-3 flex items-center gap-3 text-sm text-slate-300"><span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-white"><Mail size={16} /></span>{settings.contactEmail || "scholarsmediatech@gmail.com"}</div>
+    <footer id="contact" className="border-t border-[#e7edf3] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-4 pb-5 pt-9 text-[#253047] sm:px-6 sm:pt-10 lg:px-8">
+      <div className="mx-auto max-w-[1740px]">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-6 xl:grid-cols-[1.65fr_.72fr_.78fr_.95fr_.9fr_1.25fr]">
+          <div className="col-span-2 border-b border-[#e1e8f0] pb-6 sm:col-span-3 lg:col-span-1 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="Scholars Mediatech logo" className="h-14 w-[76px] shrink-0 object-contain" />
+              <div className="min-w-0">
+                <div className="text-sm font-extrabold leading-tight text-[#101b3d] sm:text-base">Scholars Mediatech Pvt Ltd</div>
+                <div className="mt-1 text-[11px] leading-4 text-[#596276]">Building Your Creativity · Connect Your Community</div>
+              </div>
+            </div>
+            <p className="mt-3 max-w-sm text-xs leading-[1.6] text-[#596276] sm:text-sm">A technology-driven company creating platforms and digital solutions for creators, businesses and communities.</p>
+            <div className="mt-4 flex items-center gap-2.5">
+              {socialLinks.map(({ label, href, icon: Icon, color = "text-[#e044a0]" }) => (
+                <a key={label} href={href} aria-label={label} target="_blank" rel="noreferrer" className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e7edf3] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${color}`}>
+                  <Icon size={17} />
+                </a>
+              ))}
+            </div>
           </div>
-          <div><h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">Quick Links</h3><ul className="mt-5 space-y-3 text-sm text-slate-300"><li><a href="#home" className="hover:text-white">Home</a></li><li><a href="#services" className="hover:text-white">Services</a></li><li><a href="#creators" className="hover:text-white">Explore Creators</a></li><li><a href="#how-it-works" className="hover:text-white">How It Works</a></li></ul></div>
-          <div><h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">For Users</h3><ul className="mt-5 space-y-3 text-sm text-slate-300"><li><a href="#services" className="hover:text-white">Browse Services</a></li><li><a href="#creators" className="hover:text-white">Find Creators</a></li><li><a href="#become-creator" className="hover:text-white">Become a Creator</a></li><li><a href="#community" className="hover:text-white">Community</a></li></ul></div>
-          <div><h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">Company</h3><ul className="mt-5 space-y-3 text-sm text-slate-300"><li><a href="#about" className="hover:text-white">About Us</a></li><li><a href="#faq" className="hover:text-white">FAQs</a></li><li><a href="#community" className="hover:text-white">Testimonials</a></li><li><a href="/master-admin" className="hover:text-white">Admin</a></li></ul></div>
-          <div><h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">Stay Updated</h3><div className="mt-5 flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/80 p-2"><input type="email" placeholder="Enter your email" className="w-full border-0 bg-transparent px-2 py-2 text-sm text-white placeholder:text-slate-400 outline-none" /><button type="button" className="rounded-full bg-gradient-to-r from-[#089eaa] to-[#2355cf] px-4 py-2 text-sm font-semibold text-white">Submit</button></div><div className="mt-6 flex items-center gap-3">{socialLinks.map(({ label, href, icon: Icon }) => <a key={label} href={href} target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-300 transition hover:border-[#089eaa] hover:text-white"><Icon size={16} /></a>)}</div></div>
+          <div>
+            <h3 className="text-sm font-extrabold text-[#101b3d]">Quick Links</h3>
+            <ul className="mt-3 space-y-1.5 text-xs leading-5 text-[#4c566a] sm:text-sm">
+              <li><a href="#home" className="hover:text-[#078b91]">Home</a></li>
+              <li><a href="#services" className="hover:text-[#078b91]">Services</a></li>
+              <li><a href="#creators" className="hover:text-[#078b91]">Explore Creators</a></li>
+              <li><a href="#how-it-works" className="hover:text-[#078b91]">How It Works</a></li>
+              <li><a href="#about" className="hover:text-[#078b91]">About</a></li>
+              <li><a href="#community" className="hover:text-[#078b91]">Community</a></li>
+              <li><a href="#contact" className="hover:text-[#078b91]">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-extrabold text-[#101b3d]">For Users</h3>
+            <ul className="mt-3 space-y-1.5 text-xs leading-5 text-[#4c566a] sm:text-sm">
+              <li><a href="#creators" className="hover:text-[#078b91]">Find Creators</a></li>
+              <li><a href="#services" className="hover:text-[#078b91]">Browse Services</a></li>
+              <li><a href="#how-it-works" className="hover:text-[#078b91]">Place an Order</a></li>
+              <li><a href="#how-it-works" className="hover:text-[#078b91]">Track Order</a></li>
+              <li><a href="#community" className="hover:text-[#078b91]">Leave a Review</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-extrabold text-[#101b3d]">For Creators</h3>
+            <ul className="mt-3 space-y-1.5 text-xs leading-5 text-[#4c566a] sm:text-sm">
+              <li><a href="#become-creator" className="hover:text-[#078b91]">Become a Creator</a></li>
+              <li><a href="/CommunityJoinForm" className="hover:text-[#078b91]">Create Profile</a></li>
+              <li><a href="#become-creator" className="hover:text-[#078b91]">Manage Orders</a></li>
+              <li><a href="#become-creator" className="hover:text-[#078b91]">Earnings & Payouts</a></li>
+              <li><a href="#faq" className="hover:text-[#078b91]">Creator Guidelines</a></li>
+            </ul>
+          </div>
+          <div className="border-r-0 lg:border-r lg:border-[#e1e8f0] lg:pr-5">
+            <h3 className="text-sm font-extrabold text-[#101b3d]">Company</h3>
+            <ul className="mt-3 space-y-1.5 text-xs leading-5 text-[#4c566a] sm:text-sm">
+              <li><a href="#about" className="hover:text-[#078b91]">About Us</a></li>
+              <li><a href="#about" className="hover:text-[#078b91]">Our Team</a></li>
+              <li><a href="#contact" className="hover:text-[#078b91]">Careers</a></li>
+              <li><a href="#contact" className="hover:text-[#078b91]">Press & Media</a></li>
+              <li><a href={settings.legalLinks?.privacy || defaultLandingSettings.legalLinks.privacy} className="hover:text-[#078b91]">Privacy Policy</a></li>
+              <li><a href={settings.legalLinks?.terms || defaultLandingSettings.legalLinks.terms} className="hover:text-[#078b91]">Terms & Conditions</a></li>
+            </ul>
+          </div>
+          <div className="col-span-2 sm:col-span-3 lg:col-span-1">
+            <h3 className="text-sm font-extrabold text-[#101b3d]">Stay Updated</h3>
+            <p className="mt-2 text-xs leading-[1.55] text-[#596276] sm:text-sm">Get the latest updates, new services and opportunities from Scholars Mediatech.</p>
+            <form onSubmit={(event) => event.preventDefault()} className="mt-3 flex items-center rounded-full border border-[#dfe7ef] bg-white p-1 shadow-sm">
+              <input type="email" aria-label="Email address" placeholder="Enter your email" className="min-w-0 flex-1 bg-transparent px-3 py-2 text-xs text-[#253047] outline-none placeholder:text-[#8993a3] sm:text-sm" />
+              <button type="submit" className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#079da3] px-3 py-2 text-xs font-bold text-white transition hover:bg-[#087f89] sm:px-4 sm:text-sm">Subscribe <ArrowRight size={14} /></button>
+            </form>
+            <div className="mt-4 border-t border-[#e1e8f0] pt-3 text-[10px] leading-4 text-[#727d8f] sm:text-xs">© 2025 Scholars Mediatech Pvt Ltd. All rights reserved.</div>
+          </div>
         </div>
-        <div className="mt-10 flex flex-col gap-3 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between"><div>© 2025 Scholars Mediatech Pvt. Ltd. All rights reserved.</div><div className="flex items-center gap-4"><a href="#" className="hover:text-white">Privacy Policy</a><a href="#" className="hover:text-white">Terms & Conditions</a></div></div>
       </div>
     </footer>
   );
@@ -502,14 +786,5 @@ export default function LandingPage() {
       <FaqSection />
       <FooterSection settings={settings} />
     </div>
-  );
-}
-
-function MapPinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-slate-400" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 21s6-4.35 6-10.5A6 6 0 1 0 6 10.5C6 16.65 12 21 12 21Z" />
-      <circle cx="12" cy="10.5" r="2.3" />
-    </svg>
   );
 }
