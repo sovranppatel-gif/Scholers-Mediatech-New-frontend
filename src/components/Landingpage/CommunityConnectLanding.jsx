@@ -302,32 +302,32 @@ function HeroSection() {
 
 function ServicesSection() {
   return (
-    <section id="services" className="relative overflow-hidden bg-[linear-gradient(115deg,#f3f5ff_0%,#f7fbff_48%,#edfbff_100%)] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <section id="services" className="relative overflow-hidden bg-[linear-gradient(115deg,#f3f5ff_0%,#f7fbff_48%,#edfbff_100%)] px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:py-11">
       <div className="pointer-events-none absolute -left-20 top-0 h-56 w-56 rounded-full bg-[#b9efff] opacity-60 blur-3xl" />
       <div className="pointer-events-none absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-[#cbf8f2] opacity-70 blur-3xl" />
       <div className="relative mx-auto max-w-[1800px]">
-        <div className="mb-7 text-center sm:mb-9">
-          <h2 className="flex items-center justify-center gap-2 text-[clamp(1.65rem,7vw,1.875rem)] font-bold tracking-[-0.045em] text-[#101b3d] sm:gap-4 sm:text-4xl lg:text-5xl">
+        <div className="mb-7 text-center sm:mb-9 xl:mb-5">
+          <h2 className="flex items-center justify-center gap-2 text-[clamp(1.65rem,7vw,1.875rem)] font-bold tracking-[-0.045em] text-[#101b3d] sm:gap-4 sm:text-4xl lg:text-5xl xl:text-[34px]">
             <span className="hidden h-[3px] w-12 rounded-full bg-[#078c98] sm:block" />
             Explore Our Services
             <span className="hidden h-[3px] w-12 rounded-full bg-[#078c98] sm:block" />
           </h2>
-          <p className="mt-2 text-sm text-[#3d4964] sm:text-base lg:text-lg">
+          <p className="mt-2 text-sm text-[#3d4964] sm:text-base lg:text-lg xl:mt-1 xl:text-sm">
             A wide range of creative and digital services for individuals, businesses, brands and organizations.
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-3">
           {serviceCategories.map(({ name, image, description }) => (
-            <article key={name} className="group flex min-h-[150px] gap-3 rounded-[22px] border border-[#e1e9fa] bg-white/80 p-3.5 shadow-[0_8px_18px_rgba(37,79,141,0.09)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_14px_28px_rgba(37,79,141,0.14)] sm:gap-4 sm:p-4">
-              <img src={image} alt="" aria-hidden="true" className="h-[58px] w-[58px] shrink-0 object-contain sm:h-[68px] sm:w-[68px]" />
+            <article key={name} className="group flex min-h-[150px] gap-3 rounded-[22px] border border-[#e1e9fa] bg-white/80 p-3.5 shadow-[0_8px_18px_rgba(37,79,141,0.09)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_14px_28px_rgba(37,79,141,0.14)] sm:gap-4 sm:p-4 xl:min-h-[118px] xl:gap-2.5 xl:rounded-[16px] xl:p-3 2xl:min-h-[124px]">
+              <img src={image} alt="" aria-hidden="true" className="h-[58px] w-[58px] shrink-0 object-contain sm:h-[68px] sm:w-[68px] xl:h-10 xl:w-10" />
               <div className="flex min-w-0 flex-1 flex-col items-start">
-                <h3 className="text-base font-bold leading-5 tracking-tight text-[#101b3d] sm:text-lg">{name}</h3>
-                <p className="mt-1.5 text-xs leading-[1.4] text-[#35415b] sm:text-[13px]">{description}</p>
+                <h3 className="text-base font-bold leading-5 tracking-tight text-[#101b3d] sm:text-lg xl:text-[13px] xl:leading-[1.2] 2xl:text-sm">{name}</h3>
+                <p className="mt-1.5 text-xs leading-[1.4] text-[#35415b] sm:text-[13px] xl:mt-1 xl:text-[10px] xl:leading-[1.35] 2xl:text-[11px]">{description}</p>
                 <button
                   type="button"
                   onClick={() => window.dispatchEvent(new CustomEvent("community-connect-search", { detail: name }))}
-                  className="mt-auto inline-flex items-center gap-1.5 pt-2 text-xs font-bold text-[#078b96] transition group-hover:text-[#1265b8] sm:text-sm"
+                  className="mt-auto inline-flex items-center gap-1.5 pt-2 text-xs font-bold text-[#078b96] transition group-hover:text-[#1265b8] sm:text-sm xl:gap-1 xl:pt-1.5 xl:text-[10px] 2xl:text-[11px]"
                 >
                   Explore Services <ArrowRight size={15} strokeWidth={2.5} />
                 </button>
